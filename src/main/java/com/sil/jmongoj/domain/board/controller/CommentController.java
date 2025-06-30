@@ -24,14 +24,14 @@ public class CommentController {
 
     @Operation(summary = "댓글 목록", description = "댓글 목록")
     @GetMapping("/board/{boardId}")
-    public ResponseEntity<Page<CommentDto.Response>> commentList(@ParameterObject @ModelAttribute CommentDto.Search search) {
+    public ResponseEntity<Page<CommentDto.Response>> commentList(@ModelAttribute CommentDto.Search search) {
         Page<CommentDto.Response> comments = commentService.commentList(search);
         return ResponseEntity.ok(comments);
     }
 
     @Operation(summary = "댓글 등록", description = "댓글 등록")
     @PostMapping
-    public ResponseEntity<CommentDto.Response> commentCreate(@ParameterObject @ModelAttribute @Valid CommentDto.CreateRequest request) {
+    public ResponseEntity<CommentDto.Response> commentCreate(@ModelAttribute @Valid CommentDto.CreateRequest request) {
         CommentDto.Response comment = commentService.commentCreate(request);
         return ResponseEntity.ok(comment);
     }
@@ -39,7 +39,7 @@ public class CommentController {
     @Operation(summary = "댓글 수정", description = "댓글 수정")
     @PutMapping("/{id}")
     public ResponseEntity<CommentDto.Response> boardModify(@PathVariable String id,
-        @ParameterObject @ModelAttribute @Valid CommentDto.ModifyRequest request) {
+        @ModelAttribute @Valid CommentDto.ModifyRequest request) {
         commentService.modifyComment(id, request);
         return ResponseEntity.ok(null);
     }

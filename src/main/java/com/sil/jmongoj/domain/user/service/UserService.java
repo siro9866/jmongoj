@@ -92,7 +92,7 @@ public class UserService {
      * @param request
      * @return
      */
-    public UserDto.Response createUser(UserDto.CreateRequest request) {
+    public UserDto.Response userCreate(UserDto.CreateRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException(utilMessage.getMessage("duplicate.username", null));
         }

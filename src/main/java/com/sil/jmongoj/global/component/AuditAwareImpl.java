@@ -21,10 +21,10 @@ public class AuditAwareImpl implements AuditorAware<String> {
 		if (null == authentication || !authentication.isAuthenticated()) {
 			return Optional.empty();
 		}
-		if("anonymousUser".equalsIgnoreCase(authentication.getName())) {
+		if ("anonymousUser".equalsIgnoreCase(authentication.getName())) {
 			return Optional.empty();
 		}
-		CustomUserDetails detail = (CustomUserDetails) authentication.getPrincipal();
-		return Optional.of(detail.getUsername());
+		return Optional.of(authentication.getName());
 	}
+
 }

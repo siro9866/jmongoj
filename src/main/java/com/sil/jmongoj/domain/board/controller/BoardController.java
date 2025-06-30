@@ -28,7 +28,7 @@ public class BoardController {
 
     @Operation(summary = "게시판목록", description = "게시판목록")
     @GetMapping
-    public ResponseEntity<Page<BoardDto.Response>> boardList(@ParameterObject @ModelAttribute BoardDto.Search search) {
+    public ResponseEntity<Page<BoardDto.Response>> boardList(@ModelAttribute BoardDto.Search search) {
         Page<BoardDto.Response> boards = boardService.boardList(search);
         return ResponseEntity.ok(boards);
     }
@@ -43,7 +43,7 @@ public class BoardController {
     @Operation(summary = "게시판등록", description = "게시판등록")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BoardDto.Response> boardCreate(
-            @ParameterObject @RequestPart @ModelAttribute @Valid BoardDto.CreateRequest request,
+            @RequestPart @ModelAttribute @Valid BoardDto.CreateRequest request,
             @RequestPart(name = "files", required = false) MultipartFile[] files
     ) throws IOException {
         BoardDto.Response board = boardService.boardCreate(request, files);
@@ -53,7 +53,7 @@ public class BoardController {
     @Operation(summary = "게시판수정", description = "게시판수정")
     @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BoardDto.Response> boardModify(@PathVariable String id
-        , @ParameterObject @ModelAttribute @Valid BoardDto.ModifyRequest request
+        , @ModelAttribute @Valid BoardDto.ModifyRequest request
         , @RequestPart(name = "files", required = false) MultipartFile[] files) throws IOException {
         boardService.boardModify(id, request, files);
         return ResponseEntity.ok(null);

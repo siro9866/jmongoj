@@ -17,10 +17,24 @@
 <div>
     <ul>
         <c:forEach items="${users.content}" var="user">
-            <li>${user.username}:${user.password}:${user.name}:${user.email}</li>
+            <li data-id="${user.id}">${user.username}:${user.name}:${user.email}</li>
         </c:forEach>
     </ul>
 </div>
 
+<button type="button" data-btn="btnCreate">등록</button>
+
+<script>
+    $(function () {
+        $("li").click(function () {
+            location.href = "/user/" + $(this).data("id");
+        });
+
+        $('[data-btn="btnCreate"]').click(function () {
+            location.href = "/user/create";
+        })
+
+    });
+</script>
 </body>
 </html>
