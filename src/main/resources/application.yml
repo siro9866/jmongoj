@@ -1,0 +1,82 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  application:
+    name: jmongoj
+  #  profiles.active: real  # run configuration 에서 local주입해서 사용
+  data:
+    mongodb:
+#      uri: ENC(KhEv0KCcbfQKlc/TVlHkqtqXqIecuMlsgzBP7mCBRiPY+XH5+dUlLgBYYL8xaHh/EVVxuSaR7WnVQ8Kp3/GtKEr7934nCEcGQzP0ZERoZJQ=)
+      uri: mongodb://dbuser:dbpassword@localhost:27017/jmongoj?authSource=admin
+      auto-index-creation: true
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  # MongoDB 연결 실패 시에도 애플리케이션이 계속 시작되도록 허용 여부
+  main:
+    allow-bean-definition-overriding: true
+
+  thymeleaf:
+    enabled: false   # JSP 사용하므로 Thymeleaf 끔
+
+  devtools:
+    restart:
+      enabled: true
+
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+    static-path-pattern: /static/**
+  web:
+    resources:
+      static-locations: classpath:/static/
+
+  messages:
+    basename: messages/message,messages/validation
+    encoding: UTF-8
+
+  servlet:
+    multipart:
+      maxFileSize: 10MB # 파일 하나의 최대 크기
+      maxRequestSize: 30MB  # 한 번에 최대 업로드 가능 용량
+
+logging:
+  level:
+    root: info
+    com.sil.jmongoj: debug
+    org.springframework: debug
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+
+custom:
+  url:
+    # 로그인url 설정
+
+  format:
+    date: yyyy-MM-dd
+    dateStr: yyyyMMdd
+    datetime: yyyy-MM-dd HH:mm:ss.SS
+    datetimeStr: yyyyMMddHHmmss
+
+  # 파일암호화
+  jasypt:
+    encryptor:
+      key: sil
+
+  server:
+    host:
+      # swagger 등에서 사용
+      front: http://localhost:3000
+
+  file:
+    board:
+#      dir: /Users/Shared/app/jmongoj/upload
+      dir: C:\usr\app\jmongoj\upload
+      path: /board
