@@ -12,12 +12,12 @@
 
 </head>
 <body>
-<h2>회원 목록</h2>
+<h2>게시판 목록</h2>
 
 <div>
     <ul>
-        <c:forEach items="${users.content}" var="user">
-            <li data-id="${user.id}">${user.username}:${user.name}:${user.email}</li>
+        <c:forEach items="${boards.content}" var="board">
+            <li data-id="${board.id}">${board.title}</li>
         </c:forEach>
     </ul>
 </div>
@@ -27,11 +27,11 @@
 <script>
     $(function () {
         $("li").click(function () {
-            location.href = "/user/" + $(this).data("id");
+            location.href = "/board/" + $(this).data("id");
         });
 
         $('[data-btn="btnCreate"]').click(function () {
-            location.href = "/user/create";
+            location.href = "/board/create";
         })
 
     });

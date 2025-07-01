@@ -2,6 +2,9 @@ package com.sil.jmongoj.domain.board.controller;
 
 import com.sil.jmongoj.domain.board.dto.CommentDto;
 import com.sil.jmongoj.domain.board.service.CommentService;
+import com.sil.jmongoj.domain.user.dto.UserDto;
+import com.sil.jmongoj.global.response.ApiResponse;
+import com.sil.jmongoj.global.util.UtilMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -9,45 +12,76 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
+/**
+ * 댓글
+ */
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/comment")
-@Tag(name = "게시판 댓글", description = "게시판 댓글 API")
+@RequestMapping("/comment")
 public class CommentController {
 
     private final CommentService commentService;
+    private final UtilMessage utilMessage;
 
-    @Operation(summary = "댓글 목록", description = "댓글 목록")
+    /**
+     * 댓글 목록
+     * @param search
+     * @return
+     */
     @GetMapping("/board/{boardId}")
-    public ResponseEntity<Page<CommentDto.Response>> commentList(@ModelAttribute CommentDto.Search search) {
+    public String commentList(Model model, CommentDto.Search search) {
         Page<CommentDto.Response> comments = commentService.commentList(search);
-        return ResponseEntity.ok(comments);
+        model.addAttribute("comments", comments);
+        return "board/commentList";
     }
 
-    @Operation(summary = "댓글 등록", description = "댓글 등록")
+    /**
+     * 댓글 등록
+     * @param request
+     * @return
+     */
     @PostMapping
-    public ResponseEntity<CommentDto.Response> commentCreate(@ModelAttribute @Valid CommentDto.CreateRequest request) {
-        CommentDto.Response comment = commentService.commentCreate(request);
-        return ResponseEntity.ok(comment);
+    public ResponseEntity<ApiResponse<CommentDto.Response>> commentCreate(@Valid CommentDto.CreateRequest request) {
+        CommentDto.Response response = commentService.commentCreate(request);
+
+        ApiResponse<CommentDto.Response> apiResponse = new ApiResponse<>(utilMessage.getMessage("success.create", null), response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
-    @Operation(summary = "댓글 수정", description = "댓글 수정")
+    /**
+     * 댓글 수정
+     * @param id
+     * @param request
+     * @return
+     */
     @PutMapping("/{id}")
-    public ResponseEntity<CommentDto.Response> boardModify(@PathVariable String id,
-        @ModelAttribute @Valid CommentDto.ModifyRequest request) {
-        commentService.modifyComment(id, request);
-        return ResponseEntity.ok(null);
+    public ResponseEntity<ApiResponse<CommentDto.Response>> boardModify(@PathVariable String id,
+        @Valid CommentDto.ModifyRequest request) {
+        CommentDto.Response response = commentService.modifyComment(id, request);
+        log.info(response.toString());
+        ApiResponse<CommentDto.Response> apiResponse = new ApiResponse<>(utilMessage.getMessage("success.modify", null), response);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
-    @Operation(summary = "댓글 삭제", description = "댓글 삭제")
+    /**
+     * 댓글 삭제
+     * @param id
+     * @return
+     * @throws IOException
+     */
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommentDto.Response> commentDelete(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<CommentDto.Response>> commentDelete(@PathVariable String id) {
         commentService.deleteComment(id);
-        return ResponseEntity.ok(null);
+        ApiResponse<CommentDto.Response> apiResponse = new ApiResponse<>(utilMessage.getMessage("success.delete", null), null);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 }

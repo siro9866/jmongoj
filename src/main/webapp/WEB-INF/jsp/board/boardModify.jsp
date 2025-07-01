@@ -16,13 +16,15 @@
 
 </head>
 <body>
-<h2>회원 수정</h2>
+<h2>게시판 수정</h2>
 
 <div>
     <form name="frm">
         <sec:csrfInput />
-        이름:<input type="text" name="name" value="${user.name}">
-        이메일:<input type="text" name="email" value="${user.email}">
+        제목:<input type="text" name="title" value="${board.title}">
+        내용:<input type="text" name="content" value="${board.content}">
+        <!-- 업로드할 파일 -->
+        <input type="file" name="files" />
     </form>
     <button type="button" data-btn="btnModify">수정</button>
 </div>
@@ -36,15 +38,19 @@
                 return;
             }
 
+            const formData = new FormData(document.querySelector("form[name=frm]")); // 파일 포함된 전체 form 데이터
+
             $.ajax({
-                url: "/user/${user.id}",
+                url: "/board/${board.id}",
                 type: "PUT",
-                data: $("form[name=frm]").serialize(),
+                data: formData,
+                processData: false,      // 중요! jQuery가 데이터 처리하지 않도록
+                contentType: false,      // 중요! 자동으로 multipart/form-data로 처리
                 dataType: "json",
                 success: function (response) {
                     console.log(response.data)
                     alert(response.message)
-                    location.href = "/user/" + response.data.id;
+                    location.href = "/board/" + response.data.id;
                 },
                 error: function(xhr, status, error) {
                     alert(xhr.responseJSON.message);

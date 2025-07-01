@@ -41,6 +41,7 @@ dependencies {
     implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
     implementation 'org.webjars:jquery:3.7.1'
     implementation 'org.webjars:jquery-ui:1.13.2'
+    implementation 'org.springframework.security:spring-security-taglibs'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

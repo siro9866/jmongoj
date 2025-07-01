@@ -19,13 +19,12 @@
 
 </head>
 <body>
-<h2>회원 상세</h2>
+<h2>게시판 상세</h2>
 
 <div>
     <ul>
-        <li>${user.username}</li>
-        <li>${user.name}</li>
-        <li>${user.email}</li>
+        <li>${board.title}</li>
+        <li>${board.content}</li>
     </ul>
 
     <button type="button" data-btn="btnList">목록</button>
@@ -36,10 +35,10 @@
 <script>
     $(function () {
         $('[data-btn="btnList"]').click(function () {
-            location.href = "/user";
+            location.href = "/board";
         });
         $('[data-btn="btnModify"]').click(function () {
-            location.href = "/user/${user.id}/modify";
+            location.href = "/board/${board.id}/modify";
         });
         $('[data-btn="btnDelete"]').click(function () {
 
@@ -51,7 +50,7 @@
             const header = $('meta[name="_csrf_header"]').attr('content');
 
             $.ajax({
-                url: "/user/${user.id}",
+                url: "/board/${board.id}",
                 type: "DELETE",
                 dataType: "json",
                 beforeSend: function(xhr) {
@@ -59,7 +58,7 @@
                 },
                 success: function (response) {
                     alert(response.message);            // "성공적으로 생성되었습니다"
-                    location.href = "/user";
+                    location.href = "/board";
                 },
                 error: function(xhr, status, error) {
                     alert(xhr.responseJSON.message);

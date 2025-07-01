@@ -123,7 +123,7 @@ public class BoardService {
      * @param id
      * @param request
      */
-    public void boardModify(String id, BoardDto.ModifyRequest request, MultipartFile[] mFiles) throws IOException {
+    public BoardDto.Response boardModify(String id, BoardDto.ModifyRequest request, MultipartFile[] mFiles) throws IOException {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("notfound.data", null)));
         request.boardModify(board);
@@ -151,13 +151,14 @@ public class BoardService {
 
             fileService.fileCreate(baseRequest, mFiles);
         }
+        return BoardDto.Response.toDto(board);
     }
 
     /**
      * 삭제
      * @param id
      */
-    public void commentDelete(String id) throws IOException {
+    public void boardDelete(String id) throws IOException {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("notfound.data", null)));
         boardRepository.deleteById(board.getId());

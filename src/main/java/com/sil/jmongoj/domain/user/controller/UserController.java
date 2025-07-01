@@ -14,6 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 회원
+ */
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -24,7 +27,7 @@ public class UserController {
     private final UtilMessage utilMessage;
 
     /**
-     * 회원목록
+     * 회원 목록
      * @param model
      * @param search
      * @return
@@ -38,7 +41,7 @@ public class UserController {
     }
 
     /**
-     * 회원상세
+     * 회원 상세
      * @param model
      * @param id
      * @return
@@ -51,7 +54,7 @@ public class UserController {
     }
 
     /**
-     * 회원등록화면
+     * 회원 등록화면
      * @return
      */
     @GetMapping("/create")
@@ -60,11 +63,11 @@ public class UserController {
     }
 
     /**
-     * 회원등록
+     * 회원 등록
      * @param request
      * @return
      */
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<ApiResponse<UserDto.Response>> userCreate(@Valid UserDto.CreateRequest request) {
         log.debug(request.toString());
         UserDto.Response response = userService.userCreate(request);
@@ -74,20 +77,20 @@ public class UserController {
     }
 
     /**
-     * 수정화면
+     * 회원 수정화면
      * @param model
      * @param id
      * @return
      */
     @GetMapping("/{id}/modify")
-    public String modifyForm(Model model, @PathVariable String id) {
+    public String userModifyForm(Model model, @PathVariable String id) {
         UserDto.Response user = userService.userDetail(id);
         model.addAttribute("user", user);
         return "user/userModify";
     }
 
     /**
-     * 휘원수정
+     * 휘원 수정
      * @param id
      * @param request
      * @return
@@ -102,7 +105,7 @@ public class UserController {
     }
 
     /**
-     * 회원삭제
+     * 회원 삭제
      * @param id
      * @return
      */

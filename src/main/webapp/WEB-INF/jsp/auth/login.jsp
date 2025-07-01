@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +14,8 @@
 </head>
 <body>
 <h2>Login</h2>
-<form name="frm" method="post" action="/auth/login">
+<form name="frm">
+    <sec:csrfInput />
     <label>Username: <input type="text" name="username"/></label><br/>
     <label>Password: <input type="password" name="password"/></label><br/>
     <button type="button" id="loginBtn">Login</button>
@@ -28,7 +30,10 @@
             dataType: 'json'
         }).done(function(response){
             console.log("성공:", response.message);
-            window.location.href = response.redirectUrl;
+            console.log("성공(전체):", response);
+            alert(response.message);
+            location.href = response.redirectUrl;
+
         }).fail(function(xhr, status, error){
             try{
                 console.log("실패:", xhr.status);

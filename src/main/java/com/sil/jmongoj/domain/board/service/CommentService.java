@@ -2,7 +2,6 @@ package com.sil.jmongoj.domain.board.service;
 
 import com.sil.jmongoj.domain.board.dto.CommentDto;
 import com.sil.jmongoj.domain.board.entity.Comment;
-import com.sil.jmongoj.domain.board.repository.BoardRepository;
 import com.sil.jmongoj.domain.board.repository.CommentRepository;
 import com.sil.jmongoj.global.exception.CustomException;
 import com.sil.jmongoj.global.response.ResponseCode;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -23,8 +21,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CommentService {
 
-    private final MongoTemplate mongoTemplate;
-    private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
     private final UtilMessage utilMessage;
 
@@ -47,11 +43,11 @@ public class CommentService {
      */
     public CommentDto.Response commentCreate(CommentDto.CreateRequest request) {
 
-        boardRepository.findById(request.getBoardId())
+        Comment comment = commentRepository.findById(request.getBoardId())
                 .orElseThrow(() -> new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("notfound.data", null)));
 
-        Comment savedComment = commentRepository.save(request.toEntity());
-        return CommentDto.Response.toDto(savedComment);
+        commentRepository.save(request.toEntity());
+        return CommentDto.Response.toDto(comment);
     }
 
     /**
@@ -59,7 +55,7 @@ public class CommentService {
      * @param id
      * @param request
      */
-    public void modifyComment(String id, CommentDto.ModifyRequest request) {
+    public CommentDto.Response modifyComment(String id, CommentDto.ModifyRequest request) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("notfound.data", null)));
 
@@ -73,6 +69,7 @@ public class CommentService {
 
         // MongoDB에 명시적으로 저장
         commentRepository.save(comment);
+        return CommentDto.Response.toDto(comment);
     }
 
     /**

@@ -45,12 +45,15 @@ public class UserAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("message", utilMessage.getMessage("login.success"));
-//        responseData.put("redirectUrl", "/");
 
         // 자동 리다이렉션
         SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
         if (savedRequest != null) {
             String targetUrl = savedRequest.getRedirectUrl();
+            if (targetUrl.contains(".well-known")) {
+                // http://localhost:8080/.well-known/appspecific/com.chrome.devtools.json?continue 로그인하면 이런 url로 나가버림
+                targetUrl = "/";
+            }
             responseData.put("redirectUrl", targetUrl);
         } else {
             responseData.put("redirectUrl", "/");
@@ -58,8 +61,5 @@ public class UserAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 
         response.getWriter().write(new ObjectMapper().writeValueAsString(responseData));
 
-//        SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
-//        String targetUrl = savedRequest != null ? savedRequest.getRedirectUrl() : "/";
-//        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }

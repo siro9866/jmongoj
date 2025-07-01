@@ -8,19 +8,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
+
     <script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
 
 </head>
 <body>
-<h2>회원 등록</h2>
+<h2>게시판 등록</h2>
 
 <div>
     <form name="frm">
         <sec:csrfInput />
-        아이디:<input type="text" name="username">
-        비밀번호:<input type="text" name="password">
-        이름:<input type="text" name="name">
-        이메일:<input type="text" name="email">
+        제목:<input type="text" name="title">
+        내용:<input type="text" name="content">
+        <!-- 업로드할 파일 -->
+        <input type="file" name="files" />
     </form>
     <button type="button" data-btn="btnCreate">등록</button>
 </div>
@@ -28,15 +29,20 @@
 <script>
     $(function () {
         $("button[data-btn='btnCreate']").on("click", function () {
+
+            const formData = new FormData(document.querySelector("form[name=frm]")); // 파일 포함된 전체 form 데이터
+
             $.ajax({
-                url: "/user",
+                url: "/board",
                 type: "POST",
-                data: $("form[name=frm]").serialize(),
+                data: formData,
+                processData: false,      // 중요! jQuery가 데이터 처리하지 않도록
+                contentType: false,      // 중요! 자동으로 multipart/form-data로 처리
                 dataType: "json",
                 success: function (response) {
                     console.log(response.data);
                     alert(response.message);
-                    location.href = "/user";
+                    location.href = "/board";
                 },
                 error: function(xhr, status, error) {
                     alert(xhr.responseJSON.message);

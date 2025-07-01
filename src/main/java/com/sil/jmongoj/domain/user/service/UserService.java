@@ -99,8 +99,8 @@ public class UserService {
 
         // 엔티티로 변환하기 전에 비밀번호 암호화
         request.setPassword(passwordEncoder.encode(request.getPassword()));
-        User savedUser = userRepository.save(request.toEntity());
-        return UserDto.Response.toDto(savedUser);
+        User user = userRepository.save(request.toEntity());
+        return UserDto.Response.toDto(user);
     }
 
     /**
@@ -114,8 +114,8 @@ public class UserService {
         request.userModify(user);
 
         // MongoDB에 명시적으로 저장
-        User savedUser = userRepository.save(user);
-        return UserDto.Response.toDto(savedUser);
+        userRepository.save(user);
+        return UserDto.Response.toDto(user);
     }
 
     /**
