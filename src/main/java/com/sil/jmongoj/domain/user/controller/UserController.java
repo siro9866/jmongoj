@@ -56,7 +56,7 @@ public class UserController {
      */
     @GetMapping("/create")
     public String createForm() {
-        return "user/userCreateForm";
+        return "user/userCreate";
     }
 
     /**
@@ -83,7 +83,7 @@ public class UserController {
     public String modifyForm(Model model, @PathVariable String id) {
         UserDto.Response user = userService.userDetail(id);
         model.addAttribute("user", user);
-        return "user/userModifyForm";
+        return "user/userModify";
     }
 
     /**
