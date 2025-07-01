@@ -29,25 +29,17 @@
                 url: "/user/${user.id}",
                 type: "PUT",
                 data: $("form").serialize(),
-                success: function (data) {
-                    location.href = "/user/${user.id}";
+                dataType: "json",
+                success: function (response) {
+                    console.log(response.data)
+                    alert(response.message)
+                    location.href = "/user/" + response.data.id;
                 },
                 error: function(xhr, status, error) {
-                    try {
-                        const response = JSON.parse(xhr.responseText);
-                        alert("에러 메시지: " + response.message);
-
-                        // 예: 개별 필드 에러를 콘솔에 출력
-                        if (response.errors) {
-                            for (const field in response.errors) {
-                                console.log(`${field}: ${response.errors[field]}`);
-                            }
-                        }
-
-                    } catch (e) {
-                        console.error("JSON 파싱 에러:", e);
-                        alert("예상치 못한 에러가 발생했습니다.");
-                    }
+                    alert(xhr.responseJSON.message);
+                    $(xhr.responseJSON.errors || []).each(function (i, error) {
+                        alert(error.errorField + ": " + error.errorMessage);
+                    });
                 }
             })
         })

@@ -31,9 +31,17 @@
                 url: "/user/create",
                 type: "POST",
                 data: $("form").serialize(),
-                success: function (data) {
-                    alert(data);
+                dataType: "json",
+                success: function (response) {
+                    console.log(response.data);         // UserDto.Response 값
+                    alert(response.message);            // "성공적으로 생성되었습니다"
                     location.href = "/user";
+                },
+                error: function(xhr, status, error) {
+                    alert(xhr.responseJSON.message);
+                    $(xhr.responseJSON.errors || []).each(function (i, error) {
+                        alert(error.errorField + ": " + error.errorMessage);
+                    });
                 }
             })
         })

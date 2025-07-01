@@ -52,7 +52,7 @@ logging:
   level:
     root: info
     com.sil.jmongoj: debug
-    org.springframework: debug
+#    org.springframework: debug
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
 
 custom:

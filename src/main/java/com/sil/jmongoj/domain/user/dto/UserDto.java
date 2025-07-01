@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +17,9 @@ import static com.sil.jmongoj.global.validation.ValidationPatterns.EMAIL_FORMAT;
 
 public class UserDto {
 
+    /**
+     * 로그인
+     */
     @Getter
     @Setter
     public static class LoginRequest {
@@ -99,6 +103,7 @@ public class UserDto {
     @Getter
     @Setter
     @Builder
+    @ToString
     public static class Response {
         private String id;
         private String username;    // 아이디

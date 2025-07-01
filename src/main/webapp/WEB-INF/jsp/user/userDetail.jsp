@@ -21,12 +21,16 @@
         <li>${user.email}</li>
     </ul>
 
+    <button type="button" data-btn="btnList">목록</button>
     <button type="button" data-btn="btnModify">수정</button>
     <button type="button" data-btn="btnDelete">삭제</button>
 </div>
 
 <script>
     $(function () {
+        $('[data-btn="btnList"]').click(function () {
+            location.href = "/user";
+        });
         $('[data-btn="btnModify"]').click(function () {
             location.href = "/user/${user.id}/modify";
         });
@@ -34,12 +38,16 @@
             $.ajax({
                 url: "/user/${user.id}",
                 type: "DELETE",
-                success: function (result) {
-                    alert(result);
+                dataType: "json",
+                success: function (response) {
+                    alert(response.message);            // "성공적으로 생성되었습니다"
                     location.href = "/user";
                 },
-                error: function (result) {
-                    alert(result);
+                error: function(xhr, status, error) {
+                    alert(xhr.responseJSON.message);
+                    $(xhr.responseJSON.errors || []).each(function (i, error) {
+                        alert(error.errorField + ": " + error.errorMessage);
+                    });
                 }
             })
         })

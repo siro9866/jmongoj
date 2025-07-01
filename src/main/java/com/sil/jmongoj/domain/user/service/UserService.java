@@ -108,13 +108,14 @@ public class UserService {
      * @param id
      * @param request
      */
-    public void userModify(String id, UserDto.ModifyRequest request) {
+    public UserDto.Response userModify(String id, UserDto.ModifyRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("notfound.data", null)));
         request.userModify(user);
 
         // MongoDB에 명시적으로 저장
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return UserDto.Response.toDto(savedUser);
     }
 
     /**
