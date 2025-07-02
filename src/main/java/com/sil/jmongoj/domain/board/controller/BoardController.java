@@ -71,16 +71,16 @@ public class BoardController {
     /**
      * 게시판 등록
      * @param request
-     * @param files
+     * @param attachments
      * @return
      * @throws IOException
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<BoardDto.Response>> boardCreate(
             @Valid BoardDto.CreateRequest request,
-            @RequestParam (name = "files", required = false) MultipartFile[] files
+            @RequestParam (name = "attachments", required = false) MultipartFile[] attachments
     ) throws IOException {
-        BoardDto.Response response = boardService.boardCreate(request, files);
+        BoardDto.Response response = boardService.boardCreate(request, attachments);
 
         ApiResponse<BoardDto.Response> apiResponse = new ApiResponse<>(utilMessage.getMessage("success.create", null), response);
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
@@ -103,15 +103,15 @@ public class BoardController {
      * 게시판 수정
      * @param id
      * @param request
-     * @param files
+     * @param attachments
      * @return
      * @throws IOException
      */
     @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<BoardDto.Response>> boardModify(@PathVariable String id
         , @Valid BoardDto.ModifyRequest request
-        , @RequestParam(name = "files", required = false) MultipartFile[] files) throws IOException {
-        BoardDto.Response response = boardService.boardModify(id, request, files);
+        , @RequestParam(name = "attachments", required = false) MultipartFile[] attachments) throws IOException {
+        BoardDto.Response response = boardService.boardModify(id, request, attachments);
         log.info(response.toString());
         ApiResponse<BoardDto.Response> apiResponse = new ApiResponse<>(utilMessage.getMessage("success.modify", null), response);
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);

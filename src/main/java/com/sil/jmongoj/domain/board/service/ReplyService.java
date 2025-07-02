@@ -1,8 +1,8 @@
 package com.sil.jmongoj.domain.board.service;
 
-import com.sil.jmongoj.domain.board.dto.CommentDto;
-import com.sil.jmongoj.domain.board.entity.Comment;
-import com.sil.jmongoj.domain.board.repository.CommentRepository;
+import com.sil.jmongoj.domain.board.dto.ReplyDto;
+import com.sil.jmongoj.domain.board.entity.Reply;
+import com.sil.jmongoj.domain.board.repository.ReplyRepository;
 import com.sil.jmongoj.global.exception.CustomException;
 import com.sil.jmongoj.global.response.ResponseCode;
 import com.sil.jmongoj.global.util.UtilMessage;
@@ -19,9 +19,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CommentService {
+public class ReplyService {
 
-    private final CommentRepository commentRepository;
+    private final ReplyRepository replyRepository;
     private final UtilMessage utilMessage;
 
     /**
@@ -29,10 +29,10 @@ public class CommentService {
      * @param search
      * @return
      */
-    public Page<CommentDto.Response> commentList(CommentDto.Search search) {
+    public Page<ReplyDto.Response> replyList(ReplyDto.Search search) {
         Pageable pageable = PageRequest.of(search.getPage(), search.getSize(), Sort.by(Sort.Direction.ASC, "createdAt"));
-        Page<Comment> commentPage = commentRepository.findByBoardIdAndEnabledTrue(search.getBoardId(), pageable);
-        return commentPage.map(CommentDto.Response::toDto);
+        Page<Reply> replyPage = replyRepository.findByBoardIdAndEnabledTrue(search.getBoardId(), pageable);
+        return replyPage.map(ReplyDto.Response::toDto);
 
     }
 
@@ -41,13 +41,13 @@ public class CommentService {
      * @param request
      * @return
      */
-    public CommentDto.Response commentCreate(CommentDto.CreateRequest request) {
+    public ReplyDto.Response replyCreate(ReplyDto.CreateRequest request) {
 
-        Comment comment = commentRepository.findById(request.getBoardId())
+        Reply reply = replyRepository.findById(request.getBoardId())
                 .orElseThrow(() -> new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("notfound.data", null)));
 
-        commentRepository.save(request.toEntity());
-        return CommentDto.Response.toDto(comment);
+        replyRepository.save(request.toEntity());
+        return ReplyDto.Response.toDto(reply);
     }
 
     /**
@@ -55,37 +55,37 @@ public class CommentService {
      * @param id
      * @param request
      */
-    public CommentDto.Response modifyComment(String id, CommentDto.ModifyRequest request) {
-        Comment comment = commentRepository.findById(id)
+    public ReplyDto.Response modifyReply(String id, ReplyDto.ModifyRequest request) {
+        Reply reply = replyRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("notfound.data", null)));
 
         // 권한확인(자기것만)
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(!auth.getName().equals(comment.getCreatedBy())){
-            throw new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("comment.auth.forbidden", null));
+        if(!auth.getName().equals(reply.getCreatedBy())){
+            throw new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("reply.auth.forbidden", null));
         }
 
-        request.modifyComment(comment);
+        request.modifyReply(reply);
 
         // MongoDB에 명시적으로 저장
-        commentRepository.save(comment);
-        return CommentDto.Response.toDto(comment);
+        replyRepository.save(reply);
+        return ReplyDto.Response.toDto(reply);
     }
 
     /**
      * 삭제
      * @param id
      */
-    public void deleteComment(String id) {
-        Comment comment = commentRepository.findById(id)
+    public void deleteReply(String id) {
+        Reply reply = replyRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("notfound.data", null)));
 
         // 권한확인(자기것만)
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(!auth.getName().equals(comment.getCreatedBy())){
-            throw new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("comment.auth.forbidden", null));
+        if(!auth.getName().equals(reply.getCreatedBy())){
+            throw new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("reply.auth.forbidden", null));
         }
 
-        commentRepository.deleteById(comment.getId());
+        replyRepository.deleteById(reply.getId());
     }
 }

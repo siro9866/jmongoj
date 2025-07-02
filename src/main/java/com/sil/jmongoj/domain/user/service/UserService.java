@@ -1,7 +1,7 @@
 package com.sil.jmongoj.domain.user.service;
 
 import com.sil.jmongoj.domain.user.dto.UserDto;
-import com.sil.jmongoj.domain.user.entity.User;
+import com.sil.jmongoj.domain.user.entity.Users;
 import com.sil.jmongoj.domain.user.repository.UserRepository;
 import com.sil.jmongoj.global.exception.CustomException;
 import com.sil.jmongoj.global.response.ResponseCode;
@@ -65,8 +65,8 @@ public class UserService {
         query.with(pageable);
 
         // ✨ 실행
-        List<User> users = mongoTemplate.find(query, User.class);
-        long total = mongoTemplate.count(Query.of(query).limit(-1).skip(-1), User.class);
+        List<Users> users = mongoTemplate.find(query, Users.class);
+        long total = mongoTemplate.count(Query.of(query).limit(-1).skip(-1), Users.class);
 
         // DTO 변환
         List<UserDto.Response> content = users.stream()
@@ -82,7 +82,7 @@ public class UserService {
      * @return
      */
     public UserDto.Response userDetail(String id) {
-        User user = userRepository.findById(id)
+        Users user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("notfound.data", null)));
         return UserDto.Response.toDto(user);
     }
@@ -99,7 +99,7 @@ public class UserService {
 
         // 엔티티로 변환하기 전에 비밀번호 암호화
         request.setPassword(passwordEncoder.encode(request.getPassword()));
-        User user = userRepository.save(request.toEntity());
+        Users user = userRepository.save(request.toEntity());
         return UserDto.Response.toDto(user);
     }
 
@@ -109,7 +109,7 @@ public class UserService {
      * @param request
      */
     public UserDto.Response userModify(String id, UserDto.ModifyRequest request) {
-        User user = userRepository.findById(id)
+        Users user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("notfound.data", null)));
         request.userModify(user);
 
@@ -123,7 +123,7 @@ public class UserService {
      * @param id
      */
     public void userDelete(String id) {
-        User user = userRepository.findById(id)
+        Users user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("notfound.data", null)));
         userRepository.deleteById(user.getId());
     }

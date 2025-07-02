@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "users")
-public class User extends Base {
+@Document(collection = "user")
+public class Users extends Base {
 
     @Id
     private String id;

@@ -3,8 +3,8 @@ package com.sil.jmongoj.domain.board.service;
 import com.sil.jmongoj.domain.board.dto.BoardDto;
 import com.sil.jmongoj.domain.board.entity.Board;
 import com.sil.jmongoj.domain.board.repository.BoardRepository;
-import com.sil.jmongoj.domain.file.dto.FileDto;
-import com.sil.jmongoj.domain.file.service.FileService;
+import com.sil.jmongoj.domain.attachment.dto.AttachmentDto;
+import com.sil.jmongoj.domain.attachment.service.AttachmentService;
 import com.sil.jmongoj.global.code.ParentType;
 import com.sil.jmongoj.global.exception.CustomException;
 import com.sil.jmongoj.global.response.ResponseCode;
@@ -33,7 +33,7 @@ public class BoardService {
 
     private final MongoTemplate mongoTemplate;
     private final BoardRepository boardRepository;
-    private final FileService fileService;
+    private final AttachmentService attachmentService;
     private final UtilMessage utilMessage;
 
     /**
@@ -89,12 +89,12 @@ public class BoardService {
                 .orElseThrow(() -> new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("notfound.data", null)));
         BoardDto.Response response = BoardDto.Response.toDto(board);
 
-        FileDto.Search fileSearch = new FileDto.Search();
-        fileSearch.setParentType(ParentType.BOARD);
-        fileSearch.setParentId(board.getId());
-        List<FileDto.Response> files = fileService.fileList(fileSearch);
+        AttachmentDto.Search attachmentSearch = new AttachmentDto.Search();
+        attachmentSearch.setParentType(ParentType.BOARD);
+        attachmentSearch.setParentId(board.getId());
+        List<AttachmentDto.Response> attachments = attachmentService.attachmentList(attachmentSearch);
 
-        response.setFiles(files);
+        response.setFiles(attachments);
         return response;
     }
 
@@ -103,16 +103,16 @@ public class BoardService {
      * @param request
      * @return
      */
-    public BoardDto.Response boardCreate(BoardDto.CreateRequest request, MultipartFile[] mFiles) throws IOException {
+    public BoardDto.Response boardCreate(BoardDto.CreateRequest request, MultipartFile[] attachments) throws IOException {
         Board board = boardRepository.save(request.toEntity());
 
         // 파일저장
-        if(UtilCommon.isNotEmpty(mFiles)) {
-            FileDto.CreateBaseRequest baseRequest = new FileDto.CreateBaseRequest();
+        if(UtilCommon.isNotEmpty(attachments)) {
+            AttachmentDto.CreateBaseRequest baseRequest = new AttachmentDto.CreateBaseRequest();
             baseRequest.setParentType(ParentType.BOARD);
             baseRequest.setParentId(board.getId());
 
-            fileService.fileCreate(baseRequest, mFiles);
+            attachmentService.attachmentCreate(baseRequest, attachments);
         }
 
         return BoardDto.Response.toDto(board);
@@ -123,7 +123,7 @@ public class BoardService {
      * @param id
      * @param request
      */
-    public BoardDto.Response boardModify(String id, BoardDto.ModifyRequest request, MultipartFile[] mFiles) throws IOException {
+    public BoardDto.Response boardModify(String id, BoardDto.ModifyRequest request, MultipartFile[] attachments) throws IOException {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("notfound.data", null)));
         request.boardModify(board);
@@ -133,23 +133,23 @@ public class BoardService {
 
         // UI상에서 삭제된 파일은 삭제처리해야함
         // 파일정보삭제
-        FileDto.DeleteRequest fileDeleteRequest;
+        AttachmentDto.DeleteRequest attachmentDeleteRequest;
         if(UtilCommon.isNotEmpty(request.getFileIds())) {
-            for(String fileId : request.getFileIds()) {
-                fileDeleteRequest = new FileDto.DeleteRequest();
-                fileDeleteRequest.setParentType(ParentType.BOARD);
-                fileDeleteRequest.setId(fileId);
-                fileService.fileDelete(fileDeleteRequest);
+            for(String attachmentId : request.getFileIds()) {
+                attachmentDeleteRequest = new AttachmentDto.DeleteRequest();
+                attachmentDeleteRequest.setParentType(ParentType.BOARD);
+                attachmentDeleteRequest.setId(attachmentId);
+                attachmentService.attachmentDelete(attachmentDeleteRequest);
             }
         }
 
         // 파일저장
-        if(UtilCommon.isNotEmpty(mFiles)) {
-            FileDto.CreateBaseRequest baseRequest = new FileDto.CreateBaseRequest();
+        if(UtilCommon.isNotEmpty(attachments)) {
+            AttachmentDto.CreateBaseRequest baseRequest = new AttachmentDto.CreateBaseRequest();
             baseRequest.setParentType(ParentType.BOARD);
             baseRequest.setParentId(board.getId());
 
-            fileService.fileCreate(baseRequest, mFiles);
+            attachmentService.attachmentCreate(baseRequest, attachments);
         }
         return BoardDto.Response.toDto(board);
     }
@@ -164,9 +164,9 @@ public class BoardService {
         boardRepository.deleteById(board.getId());
 
         // 파일 삭제
-        FileDto.DeleteRequest fileDeleteRequest = new FileDto.DeleteRequest();
-        fileDeleteRequest.setParentType(ParentType.BOARD);
-        fileDeleteRequest.setParentId(board.getId());
-        fileService.fileDeleteAll(fileDeleteRequest);
+        AttachmentDto.DeleteRequest attachmentDeleteRequest = new AttachmentDto.DeleteRequest();
+        attachmentDeleteRequest.setParentType(ParentType.BOARD);
+        attachmentDeleteRequest.setParentId(board.getId());
+        attachmentService.attachmentDeleteAll(attachmentDeleteRequest);
     }
 }

@@ -1,6 +1,6 @@
-package com.sil.jmongoj.domain.file.dto;
+package com.sil.jmongoj.domain.attachment.dto;
 
-import com.sil.jmongoj.domain.file.entity.File;
+import com.sil.jmongoj.domain.attachment.entity.Attachment;
 import com.sil.jmongoj.global.code.ParentType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-public class FileDto {
+public class AttachmentDto {
 
     /**
      * 등록시 기본데이타
@@ -40,8 +40,8 @@ public class FileDto {
         @NotBlank
         private String parentId;    // 파일대상 게시판 아이디
 
-        public File toEntity() {
-            return File.builder()
+        public Attachment toEntity() {
+            return Attachment.builder()
                     .uploadPath(uploadPath)
                     .orgFileName(orgFileName)
                     .sysFileName(sysFileName)
@@ -67,18 +67,18 @@ public class FileDto {
         private String modifiedBy;
         private LocalDateTime modifiedAt;
 
-        public static Response toDto(File file) {
+        public static Response toDto(Attachment attachment) {
             return Response.builder()
-                    .id(file.getId())
-                    .uploadPath(file.getUploadPath())
-                    .orgFileName(file.getOrgFileName())
-                    .sysFileName(file.getSysFileName())
-                    .parentType(file.getParentType())
-                    .parentId(file.getParentId())
-                    .createdBy(file.getCreatedBy())
-                    .createdAt(file.getCreatedAt())
-                    .modifiedBy(file.getModifiedBy())
-                    .modifiedAt(file.getModifiedAt())
+                    .id(attachment.getId())
+                    .uploadPath(attachment.getUploadPath())
+                    .orgFileName(attachment.getOrgFileName())
+                    .sysFileName(attachment.getSysFileName())
+                    .parentType(attachment.getParentType())
+                    .parentId(attachment.getParentId())
+                    .createdBy(attachment.getCreatedBy())
+                    .createdAt(attachment.getCreatedAt())
+                    .modifiedBy(attachment.getModifiedBy())
+                    .modifiedAt(attachment.getModifiedAt())
                     .build();
         }
     }

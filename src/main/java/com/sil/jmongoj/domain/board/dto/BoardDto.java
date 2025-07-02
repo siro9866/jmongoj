@@ -1,7 +1,7 @@
 package com.sil.jmongoj.domain.board.dto;
 
 import com.sil.jmongoj.domain.board.entity.Board;
-import com.sil.jmongoj.domain.file.dto.FileDto;
+import com.sil.jmongoj.domain.attachment.dto.AttachmentDto;
 import com.sil.jmongoj.global.code.BoardType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -80,7 +80,7 @@ public class BoardDto {
         private String modifiedBy;
         private LocalDateTime modifiedAt;
 
-        private List<FileDto.Response> files;
+        private List<AttachmentDto.Response> files;
 
         public static Response toDto(Board board) {
             return Response.builder()

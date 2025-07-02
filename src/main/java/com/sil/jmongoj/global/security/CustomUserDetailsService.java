@@ -1,5 +1,6 @@
 package com.sil.jmongoj.global.security;
 
+import com.sil.jmongoj.domain.user.entity.Users;
 import com.sil.jmongoj.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,7 +17,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		com.sil.jmongoj.domain.user.entity.User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		Users user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
 		List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getRole()));
 

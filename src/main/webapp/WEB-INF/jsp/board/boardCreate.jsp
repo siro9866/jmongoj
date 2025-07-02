@@ -21,7 +21,7 @@
         제목:<input type="text" name="title">
         내용:<input type="text" name="content">
         <!-- 업로드할 파일 -->
-        <input type="file" name="files" />
+        <input type="file" name="attachments" />
     </form>
     <button type="button" data-btn="btnCreate">등록</button>
 </div>
@@ -31,6 +31,12 @@
         $("button[data-btn='btnCreate']").on("click", function () {
 
             const formData = new FormData(document.querySelector("form[name=frm]")); // 파일 포함된 전체 form 데이터
+            // 불필요한 빈 파일 제거
+            for (const [key, value] of formData.entries()) {
+                if (value instanceof File && value.size === 0) {
+                    formData.delete(key);
+                }
+            }
 
             $.ajax({
                 url: "/board",

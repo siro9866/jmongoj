@@ -1,6 +1,6 @@
 package com.sil.jmongoj.domain.board.dto;
 
-import com.sil.jmongoj.domain.board.entity.Comment;
+import com.sil.jmongoj.domain.board.entity.Reply;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-public class CommentDto {
+public class ReplyDto {
     /**
      * 등록
      */
@@ -24,8 +24,8 @@ public class CommentDto {
         @NotBlank
         private String commentary;    // 댓글
 
-        public Comment toEntity() {
-            return Comment.builder()
+        public Reply toEntity() {
+            return Reply.builder()
                     .boardId(boardId)
                     .commentary(commentary)
                     .build();
@@ -43,7 +43,7 @@ public class CommentDto {
         @NotBlank
         private String commentary;    // 댓글
 
-        public void modifyComment(Comment comment) {
+        public void modifyReply(Reply comment) {
             comment.setCommentary(this.commentary);
         }
     }
@@ -61,7 +61,7 @@ public class CommentDto {
         private String modifiedBy;
         private LocalDateTime modifiedAt;
 
-        public static Response toDto(Comment comment) {
+        public static Response toDto(Reply comment) {
             return Response.builder()
                     .id(comment.getId())
                     .commentary(comment.getCommentary())

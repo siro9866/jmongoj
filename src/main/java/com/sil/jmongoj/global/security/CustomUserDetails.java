@@ -1,6 +1,6 @@
 package com.sil.jmongoj.global.security;
 
-import com.sil.jmongoj.domain.user.entity.User;
+import com.sil.jmongoj.domain.user.entity.Users;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,9 +10,9 @@ import java.util.Collection;
 public class CustomUserDetails implements UserDetails {
 
 	private static final long serialVersionUID = -4309470659487143653L;
-	private final User user;
+	private final Users user;
 	
-	public CustomUserDetails(User user) {
+	public CustomUserDetails(Users user) {
 		this.user = user;
 	}
 	
