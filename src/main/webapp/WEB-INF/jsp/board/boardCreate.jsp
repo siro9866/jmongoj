@@ -21,7 +21,7 @@
         제목:<input type="text" name="title">
         내용:<input type="text" name="content">
         <!-- 업로드할 파일 -->
-        <input type="file" name="attachments" />
+        <input type="file" name="mFiles" />
     </form>
     <button type="button" data-btn="btnCreate">등록</button>
 </div>

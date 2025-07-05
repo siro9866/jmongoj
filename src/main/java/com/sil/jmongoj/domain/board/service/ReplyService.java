@@ -1,7 +1,9 @@
 package com.sil.jmongoj.domain.board.service;
 
 import com.sil.jmongoj.domain.board.dto.ReplyDto;
+import com.sil.jmongoj.domain.board.entity.Board;
 import com.sil.jmongoj.domain.board.entity.Reply;
+import com.sil.jmongoj.domain.board.repository.BoardRepository;
 import com.sil.jmongoj.domain.board.repository.ReplyRepository;
 import com.sil.jmongoj.global.exception.CustomException;
 import com.sil.jmongoj.global.response.ResponseCode;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReplyService {
 
+    private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
     private final UtilMessage utilMessage;
 
@@ -43,10 +46,10 @@ public class ReplyService {
      */
     public ReplyDto.Response replyCreate(ReplyDto.CreateRequest request) {
 
-        Reply reply = replyRepository.findById(request.getBoardId())
+        Board board = boardRepository.findById(request.getBoardId())
                 .orElseThrow(() -> new CustomException(ResponseCode.EXCEPTION_NODATA, utilMessage.getMessage("notfound.data", null)));
 
-        replyRepository.save(request.toEntity());
+        Reply reply = replyRepository.save(request.toEntity());
         return ReplyDto.Response.toDto(reply);
     }
 

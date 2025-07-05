@@ -57,7 +57,7 @@ public class BoardDto {
         private String content;    // 내용
 
         @Schema(description = "파일")
-        private String[] fileIds;		// 파일아이디
+        private String[] attachmentIds;		// 파일아이디
 
         public void boardModify(Board board) {
             board.setTitle(this.title);
@@ -80,7 +80,7 @@ public class BoardDto {
         private String modifiedBy;
         private LocalDateTime modifiedAt;
 
-        private List<AttachmentDto.Response> files;
+        private List<AttachmentDto.Response> attachments;
 
         public static Response toDto(Board board) {
             return Response.builder()

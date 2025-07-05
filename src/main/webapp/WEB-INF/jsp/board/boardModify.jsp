@@ -24,7 +24,7 @@
         제목:<input type="text" name="title" value="${board.title}">
         내용:<input type="text" name="content" value="${board.content}">
         <!-- 업로드할 파일 -->
-        <input type="file" name="attachments" />
+        <input type="file" name="mFiles" />
     </form>
     <button type="button" data-btn="btnModify">수정</button>
 </div>

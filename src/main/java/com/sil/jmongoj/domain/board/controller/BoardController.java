@@ -2,15 +2,11 @@ package com.sil.jmongoj.domain.board.controller;
 
 import com.sil.jmongoj.domain.board.dto.BoardDto;
 import com.sil.jmongoj.domain.board.service.BoardService;
-import com.sil.jmongoj.domain.user.dto.UserDto;
 import com.sil.jmongoj.global.response.ApiResponse;
 import com.sil.jmongoj.global.util.UtilMessage;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -71,18 +67,18 @@ public class BoardController {
     /**
      * 게시판 등록
      * @param request
-     * @param attachments
+     * @param mFiles
      * @return
      * @throws IOException
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<BoardDto.Response>> boardCreate(
             @Valid BoardDto.CreateRequest request,
-            @RequestParam (name = "attachments", required = false) MultipartFile[] attachments
+            @RequestParam (name = "mFiles", required = false) MultipartFile[] mFiles
     ) throws IOException {
-        BoardDto.Response response = boardService.boardCreate(request, attachments);
+        BoardDto.Response board = boardService.boardCreate(request, mFiles);
 
-        ApiResponse<BoardDto.Response> apiResponse = new ApiResponse<>(utilMessage.getMessage("success.create", null), response);
+        ApiResponse<BoardDto.Response> apiResponse = new ApiResponse<>(utilMessage.getMessage("success.create", null), board);
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
@@ -103,17 +99,17 @@ public class BoardController {
      * 게시판 수정
      * @param id
      * @param request
-     * @param attachments
+     * @param mFiles
      * @return
      * @throws IOException
      */
     @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<BoardDto.Response>> boardModify(@PathVariable String id
         , @Valid BoardDto.ModifyRequest request
-        , @RequestParam(name = "attachments", required = false) MultipartFile[] attachments) throws IOException {
-        BoardDto.Response response = boardService.boardModify(id, request, attachments);
-        log.info(response.toString());
-        ApiResponse<BoardDto.Response> apiResponse = new ApiResponse<>(utilMessage.getMessage("success.modify", null), response);
+        , @RequestParam(name = "mFiles", required = false) MultipartFile[] mFiles) throws IOException {
+        BoardDto.Response board = boardService.boardModify(id, request, mFiles);
+        log.info(board.toString());
+        ApiResponse<BoardDto.Response> apiResponse = new ApiResponse<>(utilMessage.getMessage("success.modify", null), board);
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
